@@ -38,6 +38,8 @@ def register_request(request):
             print("[+] user, type(user): ", user, type(user))
             print("[+] dir(user): ", dir(user))
             print("[+] user.EMAIL_FIELD: ", user.EMAIL_FIELD)
+            print("[+] user.email: ", user.email)
+            print("[+] user.email_user: ", user.email_user)
             send_mail('Image Processing Web Registration Success', 'You have successfully registered!', 'huy.learns.dl@gmail.com', ['huy3041997@gmail.com'], fail_silently=False)
             print('3')
             messages.success(request, "Registration successful.")
