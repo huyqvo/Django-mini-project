@@ -46,6 +46,35 @@
                     </ul>
                 </div>
             </nav>
+            
+            <form action="http://127.0.0.1:5000/upload">
+                <input type="submit" value="Upload images" />
+            </form>
+            <br>
+            <form action="http://127.0.0.1:5000/preprocess">
+                <input type="submit" value="Preprocess image" />
+            </form>
+            <br>
+            <form action="http://127.0.0.1:5000/crop">
+                <input type="submit" value="Crop image" />
+            </form>
+            <br>
+            <form action="http://127.0.0.1:5000/trim">
+                <input type="submit" value="Upload image" />
+            </form>
+            <br>
+            <form action="http://127.0.0.1:5000/frame">
+                <input type="submit" value="Upload image" />
+            </form>
+            <br>
+            <form action="http://127.0.0.1:5000/convert">
+                <input type="submit" value="Convert .jpg to .png" />
+            </form>
+            <br>
+            <form action="http://127.0.0.1:5000/removebackground">
+                <input type="submit" value="Remove background" />
+            </form>
+            <br>
 
             <!-- Display messages -->
             {% if messages %}
