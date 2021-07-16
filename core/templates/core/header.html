@@ -11,6 +11,23 @@
             document.getElementById("image-page-frame").action = homepage_url + "frame";
             document.getElementById("image-page-convert").action = homepage_url + "convert";
             document.getElementById("image-page-removebackground").action = homepage_url + "removebackground";
+            if (window.location.href.indexOf(homepage_url)) {
+                document.getElementById("image-page-upload").style.display = "block";
+                document.getElementById("image-page-preprocess").style.display = "block";
+                document.getElementById("image-page-crop").style.display = "block";
+                document.getElementById("image-page-trim").style.display = "block";
+                document.getElementById("image-page-frame").style.display = "block";
+                document.getElementById("image-page-convert").style.display = "block";
+                document.getElementById("image-page-removebackground").style.display = "block";
+            }else {
+                document.getElementById("image-page-upload").style.display = "none";
+                document.getElementById("image-page-preprocess").style.display = "none";
+                document.getElementById("image-page-crop").style.display = "none";
+                document.getElementById("image-page-trim").style.display = "none";
+                document.getElementById("image-page-frame").style.display = "none";
+                document.getElementById("image-page-convert").style.display = "none";
+                document.getElementById("image-page-removebackground").style.display = "none";
+            }
         }
     </script>
     <head>
