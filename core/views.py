@@ -22,6 +22,7 @@ from .image_processing_methods import compress, trim, frame, convert_jpg_to_png,
 def homepage(request):
     return render(request, 'core/header.html', {'title': 'header'})
 
+@login_required
 def update_profile_success(request):
     return render(request, 'core/update_profile_success.html', {'title': 'update_profile_success'})
 
@@ -75,11 +76,13 @@ def login_request(request):
     form = AuthenticationForm()
     return render(request=request, template_name="core/login.html", context={"login_form":form})
 
+@login_required
 def logout_request(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("core:homepage")
 
+@login_required
 def update_profile(request):
     args = {}
 
@@ -147,6 +150,7 @@ def update_profile(request):
 #         else:
 #             return self.form_valid(form)
 
+@login_required
 def image_upload_view(request):
     if request.method == 'POST':
         form = ImageForm(request.POST, request.FILES)
@@ -247,6 +251,7 @@ def preprocess_image(request):
         form = ImageForm()
     return render(request, 'core/preprocess_image.html', {'postForm': postForm, 'form': form})
 
+@login_required
 def convert_image_to_png(request):
     if request.method == 'POST':
         postForm = PostForm(request.POST)
@@ -270,7 +275,7 @@ def convert_image_to_png(request):
         form = ImageForm()
     return render(request, 'core/preprocess_image.html', {'postForm': postForm, 'form': form})
 
-
+@login_required
 def main_view(request):
     # obj = Images.objects.get(pk=244)
     # context = {'obj': obj}
@@ -281,6 +286,7 @@ def main_view(request):
     context = {'form': form}
     return render(request, 'core/crop_image.html', context)
 
+@login_required
 def trim_image(request):
     if request.method == 'POST':
         postForm = PostForm(request.POST)
@@ -310,6 +316,7 @@ def trim_image(request):
         form = ImageTrimForm()
     return render(request, 'core/preprocess_image.html', {'postForm': postForm, 'form': form})
 
+@login_required
 def frame_image(request):
     if request.method == 'POST':
         postForm = PostForm(request.POST)
@@ -335,6 +342,7 @@ def frame_image(request):
         form = ImageFrameForm()
     return render(request, 'core/preprocess_image.html', {'postForm': postForm, 'form': form})
 
+@login_required
 def remove_background_image(request):
     if request.method == 'POST':
         postForm = PostForm(request.POST)
