@@ -3,13 +3,15 @@
 <html>
     <script>
         var homepage_url = "https://royal-loon-07066.herokuapp.com/";
-        document.getElementById("image-page-upload").action = homepage_url + "upload";
-        document.getElementById("image-page-preprocess").action = homepage_url + "preprocess";
-        document.getElementById("image-page-crop").action = homepage_url + "crop";
-        document.getElementById("image-page-trim").action = homepage_url + "trim";
-        document.getElementById("image-page-frame").action = homepage_url + "frame";
-        document.getElementById("image-page-convert").action = homepage_url + "convert";
-        document.getElementById("image-page-upload-removebackground").action = homepage_url + "removebackground";
+        window.onload = function() {
+            document.getElementById("image-page-upload").action = homepage_url + "upload";
+            document.getElementById("image-page-preprocess").action = homepage_url + "preprocess";
+            document.getElementById("image-page-crop").action = homepage_url + "crop";
+            document.getElementById("image-page-trim").action = homepage_url + "trim";
+            document.getElementById("image-page-frame").action = homepage_url + "frame";
+            document.getElementById("image-page-convert").action = homepage_url + "convert";
+            document.getElementById("image-page-removebackground").action = homepage_url + "removebackground";
+        }
     </script>
     <head>
         <title>Homepage</title>
@@ -70,11 +72,11 @@
             </form>
             <br>
             <form action="" id="image-page-trim">
-                <input type="submit" value="Upload image" />
+                <input type="submit" value="Trim image" />
             </form>
             <br>
             <form action="" id="image-page-frame">
-                <input type="submit" value="Upload image" />
+                <input type="submit" value="Frame image" />
             </form>
             <br>
             <form action="" id="image-page-convert">
