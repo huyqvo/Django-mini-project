@@ -12,8 +12,11 @@
             document.getElementById("image-page-convert").action = homepage_url + "convert";
             document.getElementById("image-page-removebackground").action = homepage_url + "removebackground";
             console.log(window.location.href)
+            console.log(homepage_url)
+            console.log(window.location.href == homepage_url)
             console.log(window.location.href.indexOf(homepage_url))
-            if (window.location.href.indexOf(homepage_url)) {
+            // if (window.location.href.indexOf(homepage_url) > -1) {
+            if (window.location.href == homepage_url) {
                 document.getElementById("image-page-upload").style.display = "block";
                 document.getElementById("image-page-preprocess").style.display = "block";
                 document.getElementById("image-page-crop").style.display = "block";
