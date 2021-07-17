@@ -97,7 +97,6 @@ class FileFieldForm(forms.Form):
 #         model = Image
 #         fields = ('title', 'image')
 
-
 class PostForm(forms.ModelForm):
     title = forms.CharField(max_length=128)
     body = forms.CharField(max_length=245, label="Item Description.")
@@ -109,6 +108,7 @@ class PostForm(forms.ModelForm):
 class ImageForm(forms.ModelForm):
     #image = forms.ImageField(label='Image')
     image = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), label='Image')
+
     class Meta:
         model = Images
         fields = ('image', )
@@ -127,12 +127,12 @@ class ImageTrimForm(forms.ModelForm):
 class ImageFrameForm(forms.ModelForm):
     image = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), label='Image')
     padding = forms.IntegerField(required=True)
-    COLOR_CHOICES = (
+    COLOR_CHOICES = [
         ("red", "red"),
         ("green", "green"),
         ("blue", "blue"),
         ("yellow", "yellow"),
-    )
+    ]
     color = forms.ChoiceField(choices=COLOR_CHOICES)
 
     class Meta:
