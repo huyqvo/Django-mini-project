@@ -1,9 +1,14 @@
-from django.db import models
+# standard library
+from io import BytesIO
+
+# third-party
+import PIL
+
+# Django
 from django.contrib.auth.models import User
 from django.core.files import File
+from django.db import models
 
-from io import BytesIO
-import PIL
 
 # Create your models here.
 

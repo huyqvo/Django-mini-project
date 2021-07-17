@@ -1,22 +1,31 @@
-from django.shortcuts import render, redirect
-# from .forms import NewUserForm, UpdateProfile, UploadFileForm, ModelFormWithFileField, FileFieldForm, FormView, ImageForm
-# from .models import ModelWithFileField
-from django.contrib.auth import login, authenticate, logout
+# Django
 from django.contrib import messages
-from django.contrib.messages import get_messages
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.messages import get_messages
 from django.core.mail import send_mail
 from django.forms import modelformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.urls import reverse
 from django.views.generic.edit import FormView
 
-from .forms import NewUserForm, UpdateProfile, UploadFileForm, FileFieldForm, ImageForm, PostForm, ImageTrimForm, ImageFrameForm, ImageRemoveBackgroundForm
+# local Django
+from .forms import (
+    FileFieldForm, 
+    ImageForm, ImageFrameForm, ImageRemoveBackgroundForm, ImageTrimForm, 
+    PostForm, NewUserForm, UpdateProfile, UploadFileForm,
+)
+from .image_processing_methods import (
+    compress, trim, frame, convert_jpg_to_png, remove_background
+)
 from .models import Images
 from .utility import handle_uploaded_file
-from .image_processing_methods import compress, trim, frame, convert_jpg_to_png, remove_background
+# from .forms import NewUserForm, UpdateProfile, UploadFileForm, ModelFormWithFileField, FileFieldForm, FormView, ImageForm
+# from .models import ModelWithFileField
+
 
 # Create your views here.
 def homepage(request):
@@ -29,22 +38,17 @@ def update_profile_success(request):
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
-        print('0')
-        print(form.is_valid())
+        # print(form.is_valid())
         if form.is_valid():
-            print('1')
             user = form.save(1)
-            print('2')
             login(request, user)
-            print("[+] user, type(user): ", user, type(user))
-            print("[+] dir(user): ", dir(user))
-            print("[+] user.EMAIL_FIELD: ", user.EMAIL_FIELD)
-            print("[+] user.email: ", user.email)
-            print("[+] user.email_user: ", user.email_user)
+            print("[+] user, type(user): {0}, {1}".format(user, type(user)))
+            print("[+] dir(user): {0}".format(dir(user)))
+            print("[+] user.EMAIL_FIELD: {0}".format(user.EMAIL_FIELD))
+            print("[+] user.email: {0}".format(user.email))
+            print("[+] user.email_user: {0}".format(user.email_user))
             send_mail('Image Processing Web Registration Success', 'You have successfully registered!', 'huyvo.drive.1@gmail.com', [user.email], fail_silently=False)
-            print('3')
             messages.success(request, "Registration successful.")
-            print('4')
             return redirect("core:homepage")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
@@ -58,15 +62,12 @@ def login_request(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                print('[+] Login: ')
                 login(request, user)
-                print('[+] Messages: ')
                 messages.success(request, f"You are now logged in as {username}.")
                 ## Print messages
                 # storage = get_messages(request)
                 # for message in storage:
                 #     print('[++] message: ', message)
-                print('[+] Return: ')
                 return redirect("core:homepage")
             else:
                 messages.error(request, "Invalid username or password.")
@@ -87,12 +88,12 @@ def update_profile(request):
     args = {}
 
     if request.method == 'POST':
-        print('[+] request.user: ', request.user)
+        print('[+] request.user: {0}'.format(request.user))
         form = UpdateProfile(request.POST, instance=request.user, user=request.user)
-        print('[+] request.user: ', request.user)
+        print('[+] request.user: {0}'.format(request.user))
         form.actual_user = request.user
-        print('[+] request.user: ', request.user)
-        print('[+] form: ', form)
+        print('[+] request.user: '.format(request.user))
+        print('[+] form: '.format(form))
         if form.is_valid():
             form.save(1)
             return HttpResponseRedirect(reverse('core:update_profile_success'))
@@ -169,7 +170,7 @@ def post(request):
     ImageFormSet = modelformset_factory(Images,
                                         form=ImageForm,
                                         extra=3)
-    print("[###] ImageFormSet, type(ImageFormSet): ", ImageFormSet, type(ImageFormSet))
+    print("[###] ImageFormSet, type(ImageFormSet): {0}, {1}".format(ImageFormSet, type(ImageFormSet)))
     
     if request.method == 'POST':
         postForm = PostForm(request.POST)
@@ -207,9 +208,9 @@ def post(request):
             for key in formset.files:
                 images = formset.files.getlist(key)
                 for img in images:
-                    print("[+] type(img)", type(img))
+                    print("[+] type(img): {0}".format(type(img)))
                     photo = Images(post=post_form, image=img)
-                    print("[+] type(photo)", type(photo))
+                    print("[+] type(photo): {0}".format(type(photo)))
                     photos.append(photo)
                     photo.save()
             
@@ -218,7 +219,7 @@ def post(request):
             return render(request, 'core/index.html',
                         {'postForm': postForm, 'formset': formset, 'img_obj': photos})
         else:
-            print(postForm.errors, formset.errors)
+            print("[+] {0}, {1}".format(postForm.errors, formset.errors))
     else:
         postForm = PostForm()
         formset = ImageFormSet(queryset=Images.objects.none())
@@ -238,7 +239,7 @@ def preprocess_image(request):
 
             form.save(0)
             img_obj = form.instance
-            print('[+] img_obj: ', img_obj)
+            print('[+] img_obj: {0}'.format(img_obj))
             img_obj.save()
             ori_img = img_obj.image
             new_img = compress(ori_img)
@@ -298,7 +299,7 @@ def trim_image(request):
 
             form.save(1)
             left = form.cleaned_data['left']
-            print('[++] type(left): ', type(left))
+            print('[++] type(left): {0}'.format(type(left)))
             top = form.cleaned_data['top']
             right = form.cleaned_data['right']
             bottom = form.cleaned_data['bottom']

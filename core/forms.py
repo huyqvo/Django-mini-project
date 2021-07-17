@@ -1,9 +1,12 @@
+# Django
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+# local Django
 from .models import Image, Images, Post
+
 
 # Create your forms here
 
@@ -83,12 +86,10 @@ class UploadFileForm(forms.Form):
     title = forms.CharField(max_length=50)
     file = forms.FileField()
 
-
 # If want to upload multiple files
 class FileFieldForm(forms.Form):
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 # =========================
-
 
 # class ImageForm(forms.ModelForm):
 #     """Form for the image model"""

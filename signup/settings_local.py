@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os
 
+# standard library
+import os
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -143,12 +145,12 @@ Must runserver with --insecure parameter
 '''
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-print("[SH] project_dir: ", PROJECT_DIR)
+print("[SH] project_dir: {0}".format(PROJECT_DIR))
 # STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # print("[SH] static_root: ", STATIC_ROOT)
 STATIC_URL = '/static/'
-print("[SH] static_url: ", STATIC_URL)
+print("[SH] static_url: ".format(STATIC_URL))
 # STATICFILES_DIRS = (
 #     ('assets', os.path.abspath(os.path.join(PROJECT_DIR, '..', 'static'))),
 # )

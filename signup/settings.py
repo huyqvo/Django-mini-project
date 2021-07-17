@@ -9,13 +9,17 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+# standart library
 import os
-
 from pathlib import Path
+
+# third-party
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print("[SH] base_dir: ", BASE_DIR)
+print("[SH] base_dir: {0}".format(BASE_DIR))
 
 
 # Quick-start development settings - unsuitable for production
@@ -88,10 +92,9 @@ DATABASES = {
     }
 }
 
-import dj_database_url
 
 db_from_env = dj_database_url.config()
-print('[+] db_from_env: ', db_from_env)
+print('[+] db_from_env: {0}'.format(db_from_env))
 DATABASES['default'].update(db_from_env)
 
 # Password validation
@@ -145,17 +148,17 @@ Must runserver with --insecure parameter
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-print("[SH] project_dir: ", PROJECT_DIR)
+print("[SH] project_dir: ".format(PROJECT_DIR))
 # STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# print("[SH] static_root: ", STATIC_ROOT)
+print("[SH] static_root: ".format(STATIC_ROOT))
 STATIC_URL = '/static/'
-print("[SH] static_url: ", STATIC_URL)
+print("[SH] static_url: ".format(STATIC_URL))
 # STATICFILES_DIRS = (
 #     ('assets', os.path.abspath(os.path.join(PROJECT_DIR, '..', 'static'))),
 # )
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-# print("[SH] staticfiles_dirs: ", STATICFILES_DIRS)
+print("[SH] staticfiles_dirs: ".format(STATICFILES_DIRS))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

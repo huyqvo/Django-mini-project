@@ -1,11 +1,16 @@
 '''https://stackoverflow.com/questions/33077804/losslessly-compressing-images-on-django/33989023'''
 
+# standard library
+from io import BytesIO
+
+# third-party
 import cv2
 import numpy as np
-from io import BytesIO
 from PIL import Image, ImageOps
 
+# Django
 from django.core.files import File
+
 
 def compress(image):
     im = Image.open(image)
