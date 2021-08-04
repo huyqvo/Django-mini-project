@@ -27,8 +27,6 @@ from .image_processing_methods import (
 )
 from .models import Images
 from .utility import handle_uploaded_file
-# from .forms import NewUserForm, UpdateProfile, UploadFileForm, ModelFormWithFileField, FileFieldForm, FormView, ImageForm
-# from .models import ModelWithFileField
 
 
 # Create your views here.
@@ -65,7 +63,7 @@ def register_request(
                 'You have successfully registered!', 
                 'huyvo.drive.1@gmail.com', 
                 [user.email], 
-                fail_silently=False)
+                fail_silently=True)
             messages.success(
                 request, 
                 "Registration successful.")
@@ -156,54 +154,6 @@ def update_profile(
         request, 
         'core/update_profile.html', 
         context={"update_form":form})
-
-# def upload_file(request):
-#     if request.method == 'POST':
-#         form = UploadFileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             handle_uploaded_file(request.FILES['file'])
-#             return HttpResponseRedirect('/success/url')
-#     else:
-#         form = UploadFileForm()
-#     return render(request, 'upload.html', {'form': form})
-        
-# def upload_file(request):
-#     if request.method == 'POST':
-#         form = ModelFormWithFileField(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect('/success/url')
-#         else:
-#             form = ModelFormWithFileField()
-#     return render(request, 'upload.html', {'form': form})
-
-# def upload_file(request):
-#     if request.method == 'POST':
-#         form = UploadFileForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             instance = ModelWithFileField(file_field=request.FILES['file'])
-#             instance.save()
-#             return HttpResponseRedirect('/success/url')
-#         else:
-#             form = UploadFileForm()
-#     return render(request, 'upload.html', {'form': form})
-
-
-# class FileFieldFormView(FormView):
-#     form_class = FileFieldForm
-#     template_name = 'upload.html' # Replace with your template
-#     success_url = '...' # Replace with your URL or reverse().
-
-#     def post(self, request, *args, **kwargs):
-#         form_class = self.get_form_class()
-#         form = self.get_form(form_class)
-#         files = request.FILES.getlist('file_field')
-#         if form.is_valid():
-#             for f in files:
-#                 ...
-#             return self.form_valid(form)
-#         else:
-#             return self.form_valid(form)
 
 @login_required
 def image_upload_view(
@@ -299,184 +249,6 @@ def post(
             {'postForm': postForm, 'formset': formset})
 
 @login_required
-def preprocess_image(
-        request):
-    if request.method == 'POST':
-        postForm = PostForm(request.POST)
-        form = ImageForm(
-            request.POST, 
-            request.FILES)
-        if (postForm.is_valid() and 
-            form.is_valid()):
-            post_form = postForm.save(commit=False)
-            post_form.user = request.user
-            post_form.save()
-
-            form.save(0)
-            img_obj = form.instance
-            print('[+] img_obj: {0}'.format(img_obj))
-            img_obj.save()
-            ori_img = img_obj.image
-            new_img = compress(ori_img)
-            new_img_obj = Images(
-                post=post_form, 
-                image=new_img)
-            new_img_obj.save()
-
-            return render(
-                request, 
-                'core/preprocess_image.html', 
-                {'postForm': postForm, 'form': form, 'img_obj': new_img_obj})
-    else:
-        postForm = PostForm(request.POST)
-        form = ImageForm()
-    return render(
-        request, 
-        'core/preprocess_image.html', 
-        {'postForm': postForm, 'form': form})
-
-@login_required
-def convert_image_to_png(
-        request):
-    if request.method == 'POST':
-        postForm = PostForm(request.POST)
-        form = ImageForm(
-            request.POST, 
-            request.FILES)
-        if (postForm.is_valid() and 
-            form.is_valid()):
-            post_form = postForm.save(commit=False)
-            post_form.user = request.user
-            post_form.save()
-
-            form.save(0)
-            img_obj = form.instance
-            img_obj.save()
-            ori_img = img_obj.image
-            new_img = convert_jpg_to_png(ori_img)
-            new_img_obj = Images(
-                post=post_form, 
-                image=new_img)
-            new_img_obj.save(convert=1)
-
-            return render(
-                request,
-                'core/preprocess_image.html', 
-                {'postForm': postForm, 'form': form, 'img_obj': new_img_obj})
-    else:
-        postForm = PostForm(request.POST)
-        form = ImageForm()
-    return render(
-        request, 
-        'core/preprocess_image.html', 
-        {'postForm': postForm, 'form': form})
-
-@login_required
-def main_view(
-        request):
-    # obj = Images.objects.get(pk=244)
-    # context = {'obj': obj}
-    form = ImageForm(
-        request.POST, 
-        request.FILES)
-    if form.is_valid():
-        form.save()
-        return JsonResponse({'message': 'works'})
-    context = {'form': form}
-    return render(
-        request, 
-        'core/crop_image.html', 
-        context)
-
-@login_required
-def trim_image(
-        request):
-    if request.method == 'POST':
-        postForm = PostForm(request.POST)
-        form = ImageTrimForm(
-            request.POST, 
-            request.FILES)
-        if (postForm.is_valid() and 
-            form.is_valid()):
-            post_form = postForm.save(commit=False)
-            post_form.user = request.user
-            post_form.save()
-
-            form.save(1)
-            left = form.cleaned_data['left']
-            print('[++] type(left): {0}'.format(type(left)))
-            top = form.cleaned_data['top']
-            right = form.cleaned_data['right']
-            bottom = form.cleaned_data['bottom']
-            img_obj = form.instance
-            img_obj.save()
-            ori_img = img_obj.image
-            # new_img = trim(ori_img, 10, 10, 100, 100)
-            new_img = trim(
-                ori_img, 
-                left, 
-                top, 
-                right, 
-                bottom)
-            new_img_obj = Images(
-                post=post_form, 
-                image=new_img)
-            new_img_obj.save()
-
-            return render(
-                request, 
-                'core/preprocess_image.html', 
-                {'postForm': postForm, 'form': form, 'img_obj': new_img_obj})
-    else:
-        postForm = PostForm(request.POST)
-        form = ImageTrimForm()
-    return render(
-        request, 
-        'core/preprocess_image.html', 
-        {'postForm': postForm, 'form': form})
-
-@login_required
-def frame_image(
-        request):
-    if request.method == 'POST':
-        postForm = PostForm(request.POST)
-        form = ImageFrameForm(
-            request.POST, 
-            request.FILES)
-        if (postForm.is_valid() and 
-            form.is_valid()):
-            post_form = postForm.save(commit=False)
-            post_form.user = request.user
-            post_form.save()
-
-            form.save(1)
-            padding = form.cleaned_data['padding']
-            color = form.cleaned_data['color']
-            img_obj = form.instance
-            img_obj.save()
-            ori_img = img_obj.image
-            new_img = frame(
-                ori_img, 
-                padding, 
-                color)
-            new_img_obj = Images(
-                post=post_form, 
-                image=new_img)
-            new_img_obj.save()
-
-            return render(
-                request, 
-                'core/preprocess_image.html', 
-                {'postForm': postForm, 'form': form, 'img_obj': new_img_obj})
-    else:
-        postForm = PostForm(request.POST)
-        form = ImageFrameForm()
-    return render(
-        request, 
-        'core/preprocess_image.html', 
-        {'postForm': postForm, 'form': form})
-
-@login_required
 def remove_background_image(
         request):
     if request.method == 'POST':
@@ -524,34 +296,3 @@ def remove_background_image(
         request, 
         'core/preprocess_image.html', 
         {'postForm': postForm, 'form': form})
-
-# @login_required
-# def post(request):
-#     ImageFormSet = modelformset_factory(Images,
-#                                         form=ImageForm,
-#                                         extra=3)
-    
-#     if request.method == 'POST':
-#         postForm = PostForm(request.POST)
-#         formset = ImageFormSet(request.POST, request.FILES,
-#                   queryset=Images.objects.none())
-
-#         if postForm.is_valid() and formset.is_valid():
-#             post_form = postForm.save(commit=False)
-#             post_form.user = request.user
-#             post_form.save()
-
-#             for form in formset.cleaned_data:
-#                 image = form['image']
-#                 print('[++] image: ', image)
-#                 photo = Images(post=post_form, image=image)
-#                 photo.save()
-#             messages.success(request, "Posted!")
-#             return HttpResponseRedirect("/")
-#         else:
-#             print(postForm.errors, formset.errors)
-#     else:
-#         postForm = PostForm()
-#         formset = ImageFormSet(queryset=Images.objects.none())
-#     return render(request, 'core/index.html',
-#                   {'postForm': postForm, 'formset': formset})
